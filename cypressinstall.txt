@@ -1,0 +1,26 @@
+Step 1
+Download and install visual studio code 
+https://code.visualstudio.com/download
+Step 2
+Download and install node js
+https://nodejs.org/en/download
+
+
+1.	Create Cypress folder
+2.	Open with VS code
+3.	Click on terminal
+4.	New Terminal
+5.	npm init  (npm – node package module)
+6.	Enter
+7.	Enter
+8.	Enter (we will get package json folder in VS) = till we get is this ok? Type yes enter
+9.	npm init -y
+10.	npm install cypress –save-dev  (we will get node module)[cypress: ^13.6.0]
+11.	npm install npx [npx: ^10.2.2]
+12.	npx cypress open (message seems like using 1st time)
+13.	Allow access
+14.	E2E test (End to end)
+15.	Continue
+16.	Start with chrome
+17.	Create first spec file
+18.	Scaffold optn
