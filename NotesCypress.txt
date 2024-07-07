@@ -1,0 +1,199 @@
+------------------------------------------------------------------------------
+A) Basic
+------------------------------------------------------------------------------
+1. extension for cypress file is cy.js
+2. always start the cypress coding with ///<reference types = "cypress"/>
+3. to run the testcase we have to write in terminal ==> npx cypress open ==> 
+4. then start with describe('....',function(){....}) ===> it is the global callback function to describe the test case
+5. then after that it('verify....',function(){...}) ===> it is the callback function for each separate testcase within global function
+6. We use AAA method means Arrangement, Action and Assertion
+    a) Arrangement ===> to visit the page
+    b) Actions ==> to write, click, select
+    c) Assertion ==> to get the result we want
+
+7. inside the "it" callback function we use
+    a) cy.visit("...") ===> to visit the page
+    b) cy.get("attribute").type() ===> this get is use to get the specific element which we want to test
+    c) here we have different function to get element
+        i) type ==> to write in the text box
+        ii) click ==> to click on button
+        iii) select ==> for dropdown
+
+    d) cy.get("attribute for element").should('...') ===> should because we are expecting that thing
+        after should we can write below words
+        i) contains ===> if we want to find some part of the expected text
+        ii) have.text ===> if we want to find that specific text
+        iii) be.visible ==> if want to just see that element
+
+    e) we can also write assertion as
+        cy.conatins('text message').should('be.visible')
+
+--------------------------------------------------------------------------------------
+B) Special Properties
+--------------------------------------------------------------------------------------
+1. it.only ====> To run specific test case
+                In this case only this test case will run, it will not show other test case in report
+2. it.skip ====> To skip specific test case 
+                In this case it will run only that test case which is without skip property 
+                But in report it will show all test cases we have performed
+
+
+-----------------
+C) Hooks 
+-----------------
+
+1) Hooks is made of 4 basic callback function
+    a) before ===> it will execute first
+    b) beforeEach ===> it will execute before each testcase
+    c) afterEach ===> it will execute after each testcase
+    d) after ===> it will execute at last always
+
+2) Following it the structure to write the testcase by hooks method
+///<reference types = "cypress"/>
+
+before(function(){
+    cy.log("I will execute first")
+})
+
+beforeEach(function(){
+    cy.log("I will execute before each test case")
+})
+it("Test case one", function(){
+    cy.log("This is test case one TC001")
+})
+it("Test case two", function(){
+    cy.log("This is test case two TC002")
+})
+afterEach(function(){
+    cy.log("I will execute after each test case")
+})
+
+after(function(){
+    cy.log("I will execute at last")
+})
+
+3) So the above structure will execute like below
+// 1. I will execute first =====================> 1st command
+// 2. I will execute before each test case =====> command before test case
+// 3. This is test case one TC001 ==============> it test case
+// 4. I will execute after each test case ======> command after test case
+// 5. I will execute before each test case =====> commnad before test case
+// 6. This is test case two TC002 ==============> it test case
+// 7. I will execute after each test case ======> command after test case
+// 8. I will execute at last ===================> last command
+
+4) for execution we can write "node 2.hooksBasic.cy.js" to get the result in terminal
+5) Generally this beforeEach function is use to visit the webpage, as we don't have to write address again and again, if we are doing work on same page
+6) with before for visit we can reduce the code for atleast one function
+
+---------------------------------------
+D) Element 
+----------------------------------
+1. elemenet is written as:
+    a. TagName[attr = "Value"]
+    b. input[name ="username"]
+
+------------------------------
+D) CSS Selectors
+------------------------------
+1. tagname[attr='Value'] ==> input[id="user-name"]
+2. by id ==> # before id attr value ==> #user-name
+3. by class ==> . before class attr value  ==> .btn_action
+4. by id/Class aatr nd value ==> [attr ='Value'] ==> [name="user-name"]
+
+-------------------------------
+E) Transverse 
+----------------------------------
+
+1. Transverse consist of the DOM element like parent(), sibling(), first(), last(), eq(), etc......
+2. In Transverse we form a chain to get the element 
+3. it starts normally with the describe function then beforeEach to visit webpage for each it function
+4. it is also a callback function
+5. inside it function we will write cy.get as follows
+    cy.get('.traversal-drinks-list').children().first().should('have.text','Coffee')
+      a) here .traversal-drinks-list is the element
+      b) then we want first element from children therefore children().first()
+      c) then we are putting the assertion with should
+6. This transverse is like an array indexing which start from 0
+7. 0th children is first(), and the last children is last(), while from 1st is named as eq(1), 2nd as eq(2).....
+8. DOM Element
+    a) first() ===> oth element index ===> to find specific element with have.text ===> 
+                    Get the first DOM element within a set of DOM elements.
+    b) last() ===> last element index ===> to find specific element with have.text ===> 
+                    Get the last DOM element within a set of DOM elements.
+    c) eq(1) ===> index number 1 => eq(index) ===> to find specific element with have.text ===> 
+                    Get A DOM element at a specific index in an array of elements.
+    d) children() ===> element inside the parent element ==> it comes with eq(index) ===> to find specific element with have.text ===> 
+                    Get the children of each DOM element within a set of DOM elements.
+    e) prev() ===> to get just previous element ===> to find specific element with have.text ===> 
+                    Get the immediately preceding sibling of each element in a set of the elements.
+    f) next() ===> to get just after element ===> to find specific element with have.text ===> 
+                    Get the immediately following sibling of each DOM element within a set of DOM elements.
+    g) prevAll() ===> to get all previous element within the same parent ===> to find the length of the element with have.length  ===> 
+                    Get all previous siblings of each DOM element in a set of matched DOM elements.
+    h) nextAll() ===> to get all next element within the same parent ===> to find the length of the element with have.length ===> 
+                    Get all following siblings of each DOM element in a set of matched DOM elements. 
+    i) siblings() ===> to get all siblings within the same parent ===> to find the length of the element with have.length ===> 
+                    Get all sibling DOM elements.
+    j) parents() ===> to find the total parents ===> to find the length of the element with have.length ===> 
+                    Get the parent DOM elements of a set of DOM elements.
+    k) parentsUntil() ===> to find all sub-parents ===> to find the length of the element with have.length ===>
+                    Get all ancestors of each DOM element in a set of matched DOM elements up to, but not including, the element provided.
+    l) filter() ===> to filter out some element ===> can find it with have.text ==> 
+                    Get the DOM elements that match a specific selector. Opposite of .not()
+    m) not() ===> to element which is not filter ===> can find it with have.length ===> 
+                    Filter DOM element(s) from a set of DOM elements. Opposite of .filter()
+    n) find() ===> to get element then find the another element inside that ===> 
+                    Finds the descendent DOM elements with the given selector.
+    m) closest() ===> Get the first DOM element that matches the selector (whether it be itself or one of its ancestors). ===>
+                    Basically to find the main part from sub-part, main body part
+
+---------------------------------------------------------
+F) Radio button
+---------------------------------------------------------
+
+1. it can be click only one at a time
+2. button can be check() or click()
+3. but radio button can't be uncheck()
+4. Generally syntax here is 
+
+    cy.get(tagname/attr).check()
+    cy.get(tagname/attr).should('be.checked')  
+    cy.get(tagname/attr).should('not.be.checked')
+5. Sometimes we have to do force check like below:
+
+    cy.get('[value="hi_IN"]').click({force:true})
+
+---------------------------------------------------------
+G) Check box
+---------------------------------------------------------
+
+1. We can click multiple check box at a time
+2. we can click(), check() and uncheck() both in checkbox
+3. Here general syntax
+
+    cy.get(tagname/attr).check()
+    cy.get(tagname/attr).click()
+    cy.get(tagname/attr).uncheck()
+    cy.get(tagname/attr).should('be.checked')  
+    cy.get(tagname/attr).should('not.be.checked')
+
+----------------------------------------------------------
+H) Text Element
+----------------------------------------------------------
+
+1. To get the text element on the site with log property
+
+a) invoke()
+    1. Invoke a function on the previously yielded subject.
+    
+        cy.get('.section_header').invoke('text').then((text)=>{
+            cy.log(text) // Autocomplete TextField
+        })
+
+b) text()
+    1. Get the combined text contents of each element in the set of matched elements, including their descendants.
+
+        cy.get('.section_header').then(($el)=>{
+            cy.log($el.text()) //===> Here we get more accurate ans
+        })
