@@ -27,7 +27,9 @@ A) Basic
 
     e) we can also write assertion as
         cy.conatins('text message').should('be.visible')
-
+8. <input name="first_name" type="text" class="feedback-input" placeholder="First Name" fdprocessedid="r7zegn">
+      ||    ||          ||
+    tagname attribute  Value
 --------------------------------------------------------------------------------------
 B) Special Properties
 --------------------------------------------------------------------------------------
@@ -197,3 +199,344 @@ b) text()
         cy.get('.section_header').then(($el)=>{
             cy.log($el.text()) //===> Here we get more accurate ans
         })
+
+----------------------------------------------------------
+I) Dropdown
+--------------------------------------------------------
+
+1. There are 2 types of dropdown
+    i) Static Dropdown
+    ii) Dynamic Dropdown
+
+i) Static Dropdown
+    1. It have selected list in dropdown
+    2. We use select() to select from dropdown
+
+ii) Dynamic Dropdown
+    1. It is vast list in dropdown
+    2. when we type a single letter we will get the n number of list
+    3. here we Generally do not get direct css selector, so we need to use ">" this sign to reach the exact selector
+    4. Example:
+            <div id="myInputautocomplete-list" class="autocomplete-items">
+                    <div><strong>B</strong>ruscetta<input type="hidden" value="Bruscetta">
+                    </div>
+                    <div><strong>B</strong>acon<input type="hidden" value="Bacon">
+                    </div>
+                    <div><strong>B</strong>lack beans<input type="hidden" value="Black beans">
+                    </div>
+                    <div><strong>B</strong>agels<input type="hidden" value="Bagels">
+                    </div>
+                    <div><strong>B</strong>arley<input type="hidden" value="Barley">
+                    </div>   
+            </div>
+    5. Here we cannopt reach barley direct so will css selector as follows:
+        #myInputautocomplete-list > div
+        // # because its id
+        // this help us to reach all sub selector
+
+    6. Now to reach specific css selector
+        cy.get('#myInputautocomplete-list > div').each(function(el){
+            cy.log(el.text()) //===> this will give us all list from the name 
+            if(el.text()=='Barley'){
+                cy.wrap(el).click()
+                cy.get('#submit-button').click()
+                cy.url().should('contain','Barley')
+            }
+        })
+    7. We are representing each element with el
+        then matching with the specific text
+            wrapping it to click on that element from dropdown
+                then submit button
+                        then doing the assertion
+    
+    -----------------------------------------------------------------------------
+    J) Task
+    -----------------------------------------------------------------------------
+
+    1. Why we use task in cypress?
+        a) cy.task is used to execute a command in the Node.js environment, outside of the browser.
+        b) This allows you to perform tasks that cannoyt be done directly in the browser, such as:
+                i) File system operations (reading/writing files)
+                ii) Network requests (making API calls)
+                iii) Database interactions
+                iv) Executing shell commands
+                v) Accessing environment variables
+        c) cy.task is useful for task like:
+                i) Setting up test Data
+                ii) Cleaning up after test
+                iii) Verifying file contents
+                iv) Triggering server-side actions
+        d) By using cy.task, you can extend Cypress's capabilities and integrate it with your project's specific needs.
+        e) Here's an example:
+                cy.task('db:seed') // executes a task named "db:seed" in the Node.js environment
+        f) This allows you to separate concerns and keep your test code focused on the browser interactions, while leveraging the power of Node.js for tasks that require it.
+    
+    2. we write is like regular cypress code first start with reference then
+        describe('cy.task()',function(){
+            it('Task example 2',function(){
+                cy.task('myLog','Hi How are you')
+            })
+        })
+    3. inside describe it block with callback function
+    4. This code will not run directly, we need to do some changes in cypress.config.js file
+            on('task',{
+                myLog(msg){
+                console.log(msg)
+                return null
+                }
+            })
+
+        This we have to write inside setupnode events.
+        a) we have imported myLog from config file, same element should be use in both place
+        b) we want that msg to be appear as result 
+
+    5. Same will do for Task example 3
+
+-----------------------------------------------------------------------------
+4) Tables
+-------------------------------------------------------------------------------
+
+    1. In this we will do the same process with reference ==> describe ===> it
+    2. then cy.visit for url to visit
+    3. the let sum = 0 , because here we are doing sum of the number in Tables
+    4. then first we will search for table no 1 i.e. t01
+    5. in table no. 1 we will search for row i.e. tr
+    6. then in row we will search for data which we want to take i.e. td 
+    7. In that we want to consume last data 
+    8. therefore we will do chaining like 
+
+        cy.get('#t01').find('tr').each((row)=>{
+
+        })
+    
+    9. t01 for table no 1, tr for row, then we will go for each row
+    10. then we will find the td, then the text of the last 
+        
+        cy.log(row.find('td').last().text())
+
+    11. Then we will write the code to sum up the number
+
+        sum += Number(row.find('td').last().text())
+
+        here we are finding first the row, then the td element , then the text of last element of that td
+
+        after finding that text we are doing sum of that number
+
+    12. Then with the code cy.log(sum) we are seeing the sum 
+    13. then assertion
+        
+        expect(sum).to.eq(159)
+
+        with this we are expecting the sum to be 159
+
+    14. same for other table
+
+-------------------------------------------------
+5) Tables with function
+--------------------------------------------------
+
+    1. Here we are doing same thing as table just we are using function
+    2. Here we take calculateAge as function 
+    3. Then we will perform all sum calculation here in function calculateAge
+    4. Then we will call this function in "it" function.
+    5. as we write calculateAge(css,Esum)
+        ==> here css is the html element #t01
+        ==> Esum is the actual sum of the table
+
+-------------------------------------------------------
+6) Alerts
+--------------------------------------------------------
+
+    1. In this we handle the alert which pop-up during the ok and cancel function.
+    2. first start with reference ===> describe ===> it ===> visit
+    3. There are 3 types of alert
+
+        a) Window for alert ==> only will have "ok" button
+        b) Window for confirm ==> this will have ok and cancel button
+        c) Window for prompt ==> this will inbox to write msg then ok and cancel button
+
+    4. How to do handle alert?
+
+    a) Window for alert
+
+    cy.on('window:alert',function(text){
+            expect(text).to.eq('I am a JS Alert')
+            return true
+        })
+
+    cy.on ===> when we get the alert window
+    expect(text) ==> assertion
+    eq('I am a JS Alert') ==> text equal to
+    return true ==> because we place OK
+
+
+    ==> above is the basic code for alert
+
+    then 
+
+    cy.get('[onclick="jsAlert()"]').click()
+
+    css selector here is [onclick="jsAlert()"] were we click()
+
+5. Below is the assertion
+    
+    cy.get('#result').should('have.text','You successfully clicked an alert')
+
+
+b) Windows for JS Confirm ==> its have ok and cancel button
+
+    1. here also we will do all same steps describe, it, cy.visit, etc
+    2. It is like below
+
+        it('Verify the Window JS Confirm for ok',function(){
+            cy.visit('https://the-internet.herokuapp.com/javascript_alerts')
+            cy.on('window:confirm',function(text){
+                expect(text).to.eq('I am a JS Confirm')
+                return true
+            })
+
+            //trigger event
+            cy.contains('Click for JS Confirm').click()
+            cy.get('#result').should('have.text','You clicked: Ok')
+         })
+    3. for cancel we write ===> return false
+
+    
+c) Window JS Prompt ===> for writing msg and then OK
+    1. If we write msg then OK, will get writen msg 
+    2. If we not write msg then OK, will get null msg
+    3. Here we have some changes in 
+
+        cy.window().then(function(win){.....})
+    
+    4. Here we have to stub some msg inside ......
+        
+        it('Verify the Window JS Prompt',function(){
+            cy.visit('https://the-internet.herokuapp.com/javascript_alerts')
+            cy.window().then(function(win){
+                cy.stub(win,'prompt').returns('I am learning cypress')
+                return true
+            })
+            cy.get('[onclick="jsPrompt()"]').click()
+            cy.get('#result').should('have.text','You entered: I am learning Cypress')
+        })
+
+    5. for null write null in returns
+
+--------------------------------------------------------
+7) IFrame
+------------------------------------------------------------
+
+    1. It is the concept were we can't opt the element directly.
+    2. We have to first identify the frame element then only we can identify the elements inside it
+    3. Mostly this elements are arrange in array manner
+    4. We will start the coding same as cypress....
+        first start with describe ==> it ===> cy.visit
+    5. Then if we try to find the element directly with with css selector
+
+        cy.get('a[href="index.html"]').should('have.text','Home')
+
+        then it will through error that it do not find the selector
+
+        because this selector is bound inside the frame
+
+    6. We can find the frame with different function like
+        a) with jquery function
+        b) with javascript function
+        c) normal function ===> with help of its function
+        d) utility function ===> importing from command.js
+
+    a) with jquery function
+
+        1. Therefore we will find the css selector for frame
+
+        cy.get('#frame').then(function($frame){ ------})
+
+        2. Here the use of $ shows that we are doing it with jquery
+
+            i) cy.log($frame.contents()) 
+                ===> will give the contents which are inside the frame like head, body, etc
+            ii) so from this content we will find the body because we want to work on body, and then save it to let varaible iFrameBody1
+                    let iFrameBody1 = $frame.contents().find('body')
+
+                    contents ==> Get the children of each element in the set of matched elements, including text and comment nodes.
+                    find ==> Get the descendants of each element in the current set of matched elements, filtered by a selector, jQuery object, or element
+
+            iii) Now we are wrapping this iFrameBody to iFrameBody
+
+                    cy.wrap(iFrameBody1).as('iframe')
+
+                    wrap ==> Yield the element passed into .wrap().
+                    as ==> Assign an alias for later use. Reference the alias later within a cy.get() or cy.wait() command with a @ prefix. You can alias DOM elements, routes, stubs and spies.
+
+            iv) now we will get this iframe element which we have defined earlier and then will find the DOM elements from it
+
+                       cy.get('@iframe').find('a[href="index.html"]').should('have.text','Home')
+
+
+    b) WIth JavaScript function
+
+        1. Here we will not use the $ sign instead will write only frame 
+        2. As this is javascript so we can access array in the frame
+        3. So here we are introducing the frame variable in .then function
+
+            cy.get('#frame').then(function(frame){.....})
+
+        4. Then inside that we will perform all array function
+        5. like below:
+
+             cy.log(frame[0].contentDocument.body)
+
+             i) Here frame[0] is for 1st index number, that means first frame
+             ii) Then we want to find the contents from body
+             ii) so here we are chaining the function to get the element we want
+
+        6. Now we are saving chained function with let variable in iFrameBody2
+        7. Then we will wrap that iFrameBody2 and named it as iframe
+
+                cy.wrap(iFrameBody2).as('iframe')
+        
+        8. Then we will call this iframe with @ sign to get the css selector and assertion
+
+    c) By using its function
+
+        1. here after visit we are saving the the whole content into a let variable iFrameBody3
+
+            let iFrameBody3 = cy.get('#frame').its('0.contentDocument.body').then(cy.wrap)
+
+            i) get ===> #frame
+            ii) its ===> Get a property's value on the previously yielded subject.
+            iii) 0 for 1st index of array, contentDocument.body for body ,
+            iv) then ==> Enables you to work with the subject yielded from the previous command.
+            v) wrap ==> Yield the element passed into .wrap().
+            vi) here we are chaining the function one after another 
+
+        2. Now we are finding the css selector 
+
+             iFrameBody3.find('a[href="index.html"]').should('have.text','Home')
+
+             i) we called iFrameBody3 from above 
+             ii) Then find the css selector 
+             iii) then assertion
+
+    d) By using utility function
+
+        1. Here first we will do visit
+        2. we will defined this getIFrameBody from command.js
+
+            Cypress.Commands.add('getIFrameBody',(css)=>{
+                return cy.get(css).its('0.contentDocument.body').then(cy.wrap)
+            })
+
+        3. This getIFrameBody is not imported to utility function
+        
+            cy.getIFrameBody('#frame').find('a[href="index.html"]').should('have.text','Home')
+
+            i) defined wala variable getIFrameBody me #frame import karo
+            ii) usme css selector find karo 
+            ii) then assertion karo
+
+        4. we can even use this function for other website frame
+        5. just like we use the same command function for letKodeIt website
+
+        

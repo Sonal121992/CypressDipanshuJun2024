@@ -73,6 +73,32 @@ module.exports = defineConfig({
       //   }
       // })
       //---------------exeldata--------------
+
+      // -----------------Task 1 -----------------------
+      // task1 (file Cytask.cy,js)
+      // on('task',taskname(){funcn def})
+      on('task',{
+        print(){
+          console.log('I am learning Cypress')
+          return null
+        }
+      })
+
+      // -----------------Task 2----------------------
+      on('task',{
+        myLog(msg){
+          console.log(msg)
+          return null
+        }
+      })
+
+      // --------------Task 3--------------------
+      on('task',{
+        addition({a,b}){
+          console.log(a+b)
+          return a+b
+        }
+      })
     },
   },
 });

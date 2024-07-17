@@ -38,3 +38,7 @@ Cypress.Commands.add('OHRMLogin',(un, pw)=>{
     cy.get('input[type="password').type(pw)
     cy.get('[type="submit"]').click()
 })
+
+Cypress.Commands.add('getIFrameBody',(css)=>{
+    return cy.get(css).its('0.contentDocument.body').then(cy.wrap)
+})
