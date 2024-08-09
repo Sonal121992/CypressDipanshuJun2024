@@ -1,9 +1,12 @@
 const { defineConfig } = require("cypress");
 
+
+const { verifyDownloadTasks } = require('cy-verify-downloads'); //file download option
+
 // // ---------- exceldata ---------------
-// const xlsx = require('node-xlsx').default;
-// const fs = require('fs');
-// const path = require('path');
+const xlsx = require('node-xlsx').default;
+const fs = require('fs');
+const path = require('path');
 
 // //------------mysql----------
 // const mysql = require("mysql12")
@@ -38,7 +41,10 @@ function queryDB(connectionInfo, query) {
 //-------------------------------------------
 
 module.exports = defineConfig({
-  chromeWebSecurity :false,
+  chromeWebSecurity :false, //for multitab and multi-window
+
+  //downloadsFolder:'cypress/e2e/6-downloadFile/downloadedFile',
+
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
@@ -60,19 +66,21 @@ module.exports = defineConfig({
 
       // //------------------exeldata--------------
 
-      // on("task", {
-      //   parseXlsx({ filePath }) {
-      //     return new Promise((resolve, reject) => {
-      //       try {
-      //         const jsonData = xlsx.parse(fs.readFileSync(filePath))
-      //         resolve(jsonData);
-      //       } catch (e) {
-      //         reject(e);
-      //       }
-      //     });
-      //   }
-      // })
+      on("task", {
+        parseXlsx({ filePath }) {
+          return new Promise((resolve, reject) => {
+            try {
+              const jsonData = xlsx.parse(fs.readFileSync(filePath))
+              resolve(jsonData);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }
+      })
       //---------------exeldata--------------
+
+      on('task', verifyDownloadTasks); //file download option
 
       // -----------------Task 1 -----------------------
       // task1 (file Cytask.cy,js)
@@ -99,6 +107,8 @@ module.exports = defineConfig({
           return a+b
         }
       })
+
+      
     },
   },
 });

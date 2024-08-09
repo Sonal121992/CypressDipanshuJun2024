@@ -1,0 +1,41 @@
+////////// Cypress Question Bank ///////////////////////////
+
+1.	Different blocks in cypress 
+    Describe, It, before/before each, after/after each block
+
+    These blocks help in organizing your test suite effectively and ensure proper setup and teardown actions are taken care of, providing a clean and reliable testing environment.
+
+2.	 How we can mock the data in cypress? 
+    cy.intercept() intercepts the network request made by the application to fetch data from the specified endpoint .
+    Instead of making the actual network request, Cypress will respond with the mocked data provided in the fixture file.
+
+3.	 Where we can store mocking data? 
+    Fixture file
+
+4.	What is use of commands.js file? 
+    To create custom commands
+    The commands.js file in Cypress serves as a central location for defining custom commands that you want to use across your Cypress tests. This file allows you to extend Cypress' built-in command set with your own custom commands, making it easier to write and maintain tests.
+    Here are some use cases and the purposes of the commands.js file:
+    Reusable Actions, Abstraction of Complex Interactions, Domain-Specific Language (DSL), Code Reusability
+
+5.	 What is cy.spy? 
+    cy.spy() is a method provided by Cypress for creating spies in your test cases. Spies are used to monitor function calls, including how many times they were called, with what arguments, and what they returned.
+    cy.spy() is commonly used for:
+    Mocking and monitoring function calls.
+    Verifying that certain functions are called with expected arguments.
+    Counting how many times a function is called during a test.
+    This feature is particularly useful for testing callback functions, event handlers, and other parts of your application where you want to verify that certain functions are invoked as expected.
+
+6.	 How we can get element in cypress? /How many types of locators we used in Cypress?
+    Using CSS Selectors: cy.get()
+    Using Custom Attributes: cy.get('[data-test-id="myButton"]')
+    Chaining Commands: cy.get('.container').find('button'),
+    cy.get('.myClass').first()
+    cy.get('.myClass').last()
+    cy.contains('Submit')
+
+7.	Different types of locators? / How many types of locators we used in Cypress?
+    By tag name , by id, by class, by link by partial text, custom attributes
+
+8.	 Test case for login functionality 
+    Test case to write

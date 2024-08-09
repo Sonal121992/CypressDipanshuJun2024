@@ -1,0 +1,16 @@
+{
+    "userOne":
+    {
+        "firstName": "Sonal",
+        "lastName": "Khante",
+        "email": "sonalk@gmail.com",
+        "msg": "learning fixture with cypres for user one"
+    },
+    "userTwo":
+    {
+        "firstName": "Ketan",
+        "lastName": "Lambat",
+        "email": "ketan@gmail.com",
+        "msg": "learning fixture with cypress for user two"
+    }
+}

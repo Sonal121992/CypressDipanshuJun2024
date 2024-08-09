@@ -539,4 +539,570 @@ c) Window JS Prompt ===> for writing msg and then OK
         4. we can even use this function for other website frame
         5. just like we use the same command function for letKodeIt website
 
+---------------------------------------------------------------
+8) ShadowDom
+---------------------------------------------------------------
+
+    1. Some time the actual code is written under some shadowed code
+    2. This shadowed code is called ShadowDom.
+    3. So here we cannot directly find the element in search box
+    4. We need to mention shadow root everytime while working on code.
+        a) This is for Pattern One
+
+        cy.get('shadow-signup-form').shadow().find('[name="username"]').type('Sonal')
+        cy.get('shadow-signup-form').shadow().find('[name="email"]').type('sonalkhante@gmail.com')
+        cy.get('shadow-signup-form').shadow().find('[name="password"]').type('khante99')
+        cy.get('shadow-signup-form').shadow().find('[name="confirm_password"]').type('khante99')
+        cy.get('shadow-signup-form').shadow().find('[type="button"]').click()
+
+    5. We will do everything same as we do while doing contactUs form only we need to add shadow() in it.
+    6. shadow() ===> Traverse into an element's shadow root.
+
+        b) This is for Pattern two
+
+        cy.visit('https://www.lambdatest.com/selenium-playground/shadow-dom')
+        cy.get('[name="username"]',{includeShadowDom:true}).type('Sonal')
+        cy.get('[name="email"]',{includeShadowDom:true}).first().type('sonalk@gmail.com')
+        cy.get('[name="password"]',{includeShadowDom:true}).type('sonal1992')
+        cy.get('[name="confirm_password"]',{includeShadowDom:true}).type('sonal1992')
+        cy.get('[type="button"]',{includeShadowDom:true}).click()
+
+    7. {includeShadowDom:true} ===> so instead of shadow-signup-form we will use includeShadowDom: true
+    8. This will help us to execute the shadowed test cases.
+
+------------------------------------------------------------
+9) MultiTabWindow
+------------------------------------------------------------
+    1. Here we learn to how to work with mutli-tab and mutli-window.
+
+    a) Verify multi-tab href attribute.
+        1. when click on opentab then when it gets open.
+        2. When click button new link will open in same tab.
+        3. the reference address will include '/courses'.
+
+            cy.visit('https://www.letskodeit.com/practice')
+            cy.get('#opentab').should('have.attr','href').and('include','/courses')
+    
+    b) Verify multi-tab without removing target attribute.
+        1. Here on clicking on link then it will get open in new tab.
+        2. To open the window in new tab.
+        3. we need to write ===> newTab.prop('href)
+      
+            cy.visit('https://www.letskodeit.com/practice')
+            cy.get('#opentab').then(function(newTab){
+            let url = newTab.prop('href')
+            cy.visit(url)
+            cy.url().should('contain','/courses')
+            })
+
+    c) Verify multi-tab by removing target attribute in rahul shetty site
+        1. invoke() ===> Invoke a function on the previously yielded subject.
+        2. With the remove attribute target we are opening it in same link.
+
+            cy.visit('https://rahulshettyacademy.com/AutomationPractice/')
+            cy.get('#opentab').first().invoke('removeAttr','target').click()
+            cy.url().should('contain','qaclickacademy')
+
+    d) Verify multi-tab without removing target attribute
+        1. Without removing target attribute ==> it will open in new tab
         
+        cy.visit('https://rahulshettyacademy.com/AutomationPractice/')
+        cy.get('#opentab').first().then(function(newTab1){
+            let url1 = newTab1.prop('href')
+            cy.visit(url1)
+            cy.url().should('contain','qaclickacademy')
+        })
+
+    e) Verify multi-window for letKodeIt
+        1. On clicking on the button, it will get open a new window.
+        2. But for this we have to through a command cy.window()
+        3. with .then(win) means after we click on window.
+        4. cy.stub() ===> Stubs single method of an object.
+        5. we stub, to call to open a new window.
+        6. win.location.href = url ===> location of new window.
+
+        cy.visit('https://www.letskodeit.com/practice')
+        cy.window().then((win)=>{
+        cy.stub(win,'open').callsFake((url)=>{
+                win.location.href = url
+            })
+        })
+        cy.get('#openwindow').click()
+        cy.url().should('contain','/courses')
+
+---------------------------------------------------------------
+10) fileUpload
+---------------------------------------------------------------
+
+    a) Verify the single upload
+        1. When need to give path of the file we want to upload.
+        2. Get the element were we want to upload the file.
+        3. After we upload we need to submit it.
+        4. When we click on the submit button we will get the alert message.
+        5. cy.on() ==> it is the alert pop up for submit.
+
+            cy.on('window:alert',function(text){
+                expect(text).to.eq('Your file has now been uploaded!')
+                return true
+            })
+        6.
+        
+            cy.visit('https://www.webdriveruniversity.com/File-Upload/index.html')
+            let path1 = 'C:/Sonal/Minskole/CypressDipanshuJun2024/cypress/e2e/3.Practice/15.FileUpload/fileUpload.txt' // reverse the oblique sign from \ to /
+            cy.get('#myFile').selectFile(path1)
+
+            // Here we use cy.on because on click we get new window therefore cy.on
+            cy.on('window:alert',function(text){
+                expect(text).to.eq('Your file has now been uploaded!')
+                return true
+            })
+            cy.get('#submit-button').click()
+            cy.url().should('contain','fileUpload.txt')
+
+    
+    b) Verify the multiple upload
+        1. For multiple upload we have to give different path.
+        2. To put the multiple file on the upload we have to put them at different varaible with different link.
+        3. then to access different path in one go, we have to write in array.
+        4. selectFile([path1,path2,path3]) ===> array of different path
+
+            cy.visit('https://www.zoho.com/in/books/accounting-software-demo/#/salesorders/new')
+            let path1 = 'C:/Sonal/Personal/Novika/St.Paul/Nursery/Colouring Sheet - Assessment 1 (1).pdf'
+            let path2 = 'C:/Sonal/Personal/Novika/Kidzee Project/Action Chart (1).pdf'
+            let path3 = 'C:/Sonal/Personal/Novika/Kidzee Project/Family Tree.pdf'
+            cy.get('input[type="file"]').first().selectFile([path1,path2,path3])
+            cy.get('[id="ember355"]').should('contain','3')
+    
+--------------------------------------------------------------------
+11) Read Write 
+--------------------------------------------------------------------
+
+    1. To Read and Write file.
+    2. first define the string in a varaible. like str1.
+    3. then cy.readFile() ==> in this give the link of the file which we want to read.
+    4. with cy.log(data) ===> we will get the data in console.
+
+        let str1 = 'Novika'
+        let str2 = 'Khante'
+
+
+        // reading the file
+        cy.readFile('C:/Sonal/Minskole/CypressDipanshuJun2024/cypress/e2e/3.Practice/17.ReadWriteFile/File/InfoText .txt').then((data)=>{
+            cy.log(data)
+    
+    5. then cy.writeFile() ==> now give the link of the file were we want to write data.
+    6. then provide the varaible what we want to enter in that file.
+    7. Then read the data.
+
+        cy.writeFile('C:/Sonal/Minskole/CypressDipanshuJun2024/cypress/e2e/3.Practice/17.ReadWriteFile/File/InfoText .txt',str1)
+        //cy.writeFile('C:/Sonal/Minskole/CypressDipanshuJun2024/cypress/e2e/3.Practice/17.ReadWriteFile/File/InfoText .txt',str2)
+        cy.readFile('C:/Sonal/Minskole/CypressDipanshuJun2024/cypress/e2e/3.Practice/17.ReadWriteFile/File/InfoText .txt').then((data)=>{
+            cy.log(data)
+        })
+
+    8. Same we have tried with flipkart site.
+    9. From this site we can write the data from search field.
+    10. Then export the data into excel sheet.
+    11.Then that data is converted into text.
+    12. with this ₹ sign is converted blank space.
+    13. , is also replace with blank space.
+    14. Then collect the data in which  price < 70000
+    15. Then put the data at different column name ===> anme and price ==> now flag it a+ ==> a+ means to shift to new row.
+
+------------------------------------------------------------------------
+12) Find browser
+-------------------------------------------------------------------------
+
+    1. Here with find the browser.
+    2. We find the browser specification here.
+    3. We get here different details about our browser. 
+
+        cy.visit('https://webdriveruniversity.com/Contact-Us/contactus.html')
+        cy.log(`Running in ${Cypress.browser.name}`) // Running in chrome // ww will get the browser name were we are running
+        cy.log(`Browser family ${Cypress.browser.family}`) // Browser family chromium
+        cy.log(`Browser version ${Cypress.browser.version}`) // Browser version 127.0.6533.89
+        cy.log(`Browser major version ${Cypress.browser.majorVersion}`) // Browser major version 127
+        if(Cypress.browser.name === 'edge'){
+            cy.log('edge')
+        }
+
+----------------------------------------------------------------------------
+13) Drag Drop, Double CLick, Mouse Over, Click and Hold
+----------------------------------------------------------------------------
+
+    1. mousedown ==> to press the mouse.
+    2. movermove ==> to drag or move the mouse.
+    3. mouseup ==> to release the mouse.
+    4. {which: 1} and {button: 1} ==> for left button of mouse.
+    5. {which: 2} and {button: 2} ==> for right button of mouse.
+    6. trigger ==> Trigger an event on a DOM element. / to do some action.
+    7. dblclick ==> if want to click 2 times of on same button.
+    8. invoke ==> Invoke a function on the previously yielded subject.
+    9. {force: true} ==> Forces the action, disables waiting for actionability
+
+        a) Verify Drag and Drop process
+            i) first click with mousedown then 
+            ii) drag with mousemove
+            iii) then drop the box with mouseup 
+            iv) we will see the changes as assertion
+
+            cy.visit('https://webdriveruniversity.com/Actions/index.html')
+            cy.get('[id="draggable"]').trigger('mousedown',{which:1}) 
+            
+            // {which:1} ===> for 1st button ==> left button // mousedown to press button
+            cy.get('[id="droppable"]').trigger('mousemove',{which:1}).trigger('mouseup',{force: true}) 
+            
+            // mousemove ==> to move the block //mouseup ==> to release the button
+            cy.get('p[style="background-color: rgb(244, 89, 80); height: 100%;"]>b').should('have.text','Dropped!') // assertion
+
+            cy.get('[id="draggable"]').trigger('mousedown',{button:1})
+            cy.get('[id="droppable"]').trigger('mousemove',{button:1}).trigger('mouseup',{force: true})
+            cy.get('p[style="background-color: rgb(244, 89, 80); height: 100%;"]>b').should('have.text','Dropped!')
+
+        b) Verify Double Click
+            i) for this one element dblclick ==> this will automatically double click the event.
+            ii) on this double click trigger we will see the changes which will be our assertion.
+
+                cy.visit('https://webdriveruniversity.com/Actions/index.html')
+                cy.get('[id="double-click"]').should('not.have.class','double') // Because at 1st we don't have double keyword in class
+                cy.get('[id="double-click"]').trigger('dblclick',{which:1})
+                cy.get('[id="double-click"]').should('have.class','double')// on dbl click we get that double keyword in class.
+                cy.get('[id="double-click"]').trigger('dblclick',{which:1})
+                cy.get('[id="double-click"]').should('not.have.class','double')
+
+        c) Verify Mouse Hover
+            i) On moving the mouse over the element we will get the changes.
+            ii) 
+
+                cy.visit('https://webdriveruniversity.com/Actions/index.html')
+                cy.get('[class="list-alert"]').first().should('not.be.visible')
+                //cy.contains('Hover Over Me First!').trigger('mouseover')
+                //cy.contains('Hover Over Me First!').invoke('show')
+                cy.get('[class="dropdown-content"]').first().invoke('show')
+                cy.get('[class="list-alert"]').first().should('be.visible')
+                cy.get('[class="list-alert"]').first().click()
+                cy.on('window:alert',function(text){
+                    expect(text).to.eq('Well done you clicked on the link!')
+                    return true
+                })  
+
+        d) Verify the click and Hold
+            i) to click and hold mousedown and to release mouseup
+            ii) We will see the changes when we click and hold
+            ii) and also after we relase the key
+
+                cy.visit('https://webdriveruniversity.com/Actions/index.html')
+                //cy.get('[id="click-box"]').should('contains','Click and Hold!')
+                cy.get('[id="click-box"]').trigger('mousedown',{button:1}).should('contains','Well done!')
+                cy.get('[id="click-box"]').trigger('mouseup',{button:1}).should('have.text','Dont release me!!!')
+    
+-----------------------------------------------------------------------------
+14) Excel Data import
+-----------------------------------------------------------------------------
+    1. when we are working with excel sheet then, we have install node-xlsx with command in terminal ===> npm install node-xlsx --save
+    2. Then only this code will run further
+    3. define parseXlsx in command.js file of support folder
+    
+        Cypress.Commands.add('parseXlsx',(inputFile)=>{
+        return cy.task('parseXlsx',{filePath: inputFile})
+        })
+
+    4. also update the information in cypress.config.js file
+    
+        // // ---------- exceldata ---------------
+        const xlsx = require('node-xlsx').default;
+        const fs = require('fs');
+        const path = require('path');
+    
+    5. Then under e2e we have to write
+
+        //---------------exeldata--------------
+
+        on('task', verifyDownloadTasks); //file download option
+    
+    5. Mostly for excel data the code is already written in cypress.config.js filr ==> we just need to uncommit it.
+
+    6. Now we have import parseXlsx from command.js as a method.
+    7. In this method give the link of Excelpayload.xlsx from fixture file. 
+    8. Reverse the slash from link.
+
+        cy.parseXlsx('C:/Sonal/Minskole/CypressDipanshuJun2024/cypress/fixtures/exelPayload.xlsx').then((jsonData)=>{
+            // change the \ to /
+            cy.log(jsonData[0].data)
+            //cy.log(jsonData[0].data[1][0])
+
+            for(let i=1; i<jsonData[0].data.length; i++){
+                cy.visit('https://webdriveruniversity.com/Contact-Us/contactus.html')
+                //                                                 row column
+                cy.get('[name="first_name"]').type(jsonData[0].data[i][0])
+                cy.get('[name="last_name"]').type(jsonData[0].data[i][1])
+                cy.get('[name="email"]').type(jsonData[0].data[i][2])
+                cy.get('[name="message"]').type(jsonData[0].data[i][3])
+                cy.get('[type="submit"]').click()
+                cy.get('h1').should('have.text','Thank You for your Message!')
+            }
+        })
+
+    7. jsonData[0] ==> means sheet 1
+    8. then data[i][0] ==> Here i is row and 0 is column.
+    9. Means we have to take data from any specific row and column will change for that row.
+    10. Like this we will import n number of data from excel sheet and perform our action.
+    11. This will even reduce our code. we don't have to write different code for different data.
+
+----------------------------------------------------------------------------------
+15) File download
+-----------------------------------------------------------------------------------
+
+    1. To download file from webpage.
+    2. We can do download by 2 ways
+        a) cy.readFile()
+        b) by plugin ==> cy.verifyDownload()
+
+    a) verify download file by cy.readFile()
+
+        cy.visit('http://autopract.com/selenium/download.html')
+        cy.get('.mydownload').click()
+        cy.readFile('cypress/downloads/sample.csv', {timeout: 6000}).should('contain','Month') 
+
+
+        i) First visit the webpage
+        ii) Then get the element from were we want to download. then click()
+        iii) with cy.readFile give the location and name of the file were we want to save.
+        iv) csv ==> ek read karege and baar baar rewrite karenge
+        v) Jo csv file humne liya hai waha hum write karenge
+        vi) Humne jo location diya hai waha wo download ho jaega.
+
+    b) Verify File Download file by plugin
+
+        cy.visit('http://autopract.com/selenium/download.html')
+        cy.get('#download').click()
+        cy.verifyDownload('sample2.csv')
+
+        i) First visit webpage.
+        ii) Then with the find element and get it and click it.
+        iii) Here only file name requires.
+        iv) to download we have to write below command in e2e.js
+
+            require('cy-verify-downloads').addCustomCommand(); //file download option
+
+        v) When we have already written the plugin in e2e.js then we don't have to write path were we want to save the file.
+        vi) we just need to give the csv file name, by which name we want to download file.
+
+---------------------------------------------------------------------------------------
+16) fixtures
+---------------------------------------------------------------------------------------
+    1. Generally we put the data in the contactUs form directly through code.
+    2. As given in first test case in fixture.
+    3. In second test case we have define the data before with a varaible and then we have used it in the testcase.
+    4. In third testcase we have defined the data in the fixture file.
+            from fixture file we have imported the data using below method:
+                cy.fixture
+
+        cy.fixture("contact1").then(function(user){
+            cy.visit('https://webdriveruniversity.com/Contact-Us/contactus.html')
+
+            cy.get('[name="first_name"]').type(user.firstName)
+            cy.get('[name="last_name"]').type(user.lastName)
+            cy.get('[name="email"]').type(user.email)
+            cy.get('[name="message"]').type(user.msg)
+            cy.get('[type="submit"]').click()
+
+            cy.get('h1').should('have.text','Thank You for your Message!')
+        })
+
+    5. Here we have written data in contact1 file which is in json format.
+    6. Now with method we have imported the data
+        cy.fixture(contact1).then(function(user))
+    7. We have use call back function were we have defined the user.
+    8. So while getting the data we will write user.firstName 
+    9. This firstName we write after user should be same as fixture file.
+    10. Same we can do for multiple data ====>
+        i) Multiple Data    
+            1. For this we will define the multiple data in array form.
+            2. For each data we will give the name like userOne and userTwo.
+            3. Here we will get the data for each element by the path like 
+                user.userTwo.firstName
+            user ==> main array
+            userTwo ==> subpart of the array
+            firstName ===> is the data we want
+
+        cy.fixture("contact2").then(function(user){
+            cy.visit('https://webdriveruniversity.com/Contact-Us/contactus.html')
+
+            cy.get('[name="first_name"]').type(user.userTwo.firstName)
+            cy.get('[name="last_name"]').type(user.userTwo.lastName)
+            cy.get('[name="email"]').type(user.userTwo.email)
+            cy.get('[name="message"]').type(user.userTwo.msg)
+            cy.get('[type="submit"]').click()
+
+            cy.get('h1').should('have.text','Thank You for your Message!')
+        })
+
+
+    b) Fixture import
+        i) In the previous example we have use the fixture method. that is cy.fixture()
+        ii) Now in this we have imported fixture with import word like below:
+
+            import user1 from "../../fixtures/contact1.json" // single payload
+            import user2 from "../../fixtures/contact2.json" // multiple payload defined with varaible name
+            import user3 from "../../fixtures/contact3.json" // multiple payload given in a array 
+
+        a) For single user import
+            i) After it statement call back function.
+            ii) use ===> directly user1 to call the data from fixture.
+            iii) Since for single data we have use user1 as varaible.
+            iv) Here we will get single test case in run.
+
+        b) multiple payload defined with varaible name.
+            i) After it statement with call back function.
+            ii) use ==> for(let keys in user2) ===> Here user2 is varaible we use to import multiple data which is in normal format from fixture.
+            iii) This data in contact2.json is written in string format were one data is define with userOne and other data is define with userTwo.
+            iv) with key keyword we can access both the data for this testcase.
+
+            But
+
+            v) Here we can run all payload in single test case...means we can't verify if there is problem in some of the payload
+            vi) we can't verify the exact problem in specific payload
+            
+            Therefore we will define it with forEach Payload.
+
+        
+        c)  Verify contact3 form with forEach function ====> multiple payload given in a array 
+            i) In user3 import varaible we have use multiple data but in array form.
+            ii) Now since the data is arrange in array format ==> then to access the data in array we have to use forEach method.
+            iii) SO we will write 
+                    user3.forEach(function(el){......})
+            iv) el is the pararmeter for each element we want to import for specific data.
+            v) In the curly bracket we will write our normal get code to execute the testcase.
+                    cy.get('[name="first_name"]').type(el.firstName)
+            vi) This will run 1st tym for 1st data then 2nd tym for 2nd set of data.
+            vii) but in execution we will see only one test case for multiple data.
+            viii) This is problem we don't want.
+            ix) we want multiple testcase for multiple data use only single set of code.
+            x) Therefore we will use index pararmeter
+
+        d) Verify the contact3 form for user ${index+1} ===> multiple payload given in a array 
+            i) For this we will write the it statement inside the callback function with forEach method.
+                    ====> We have written this first because we want each testcase for different user.
+
+                    user3.forEach(function(el,index){........})
+            
+            ii) Now inside this callback function we will write it statement as follows:
+
+                    it.only(`Verify the contact3 form for user ${index+1}`,function(){.......})
+
+            iii) We have written the statement inside it with back ticks.
+            iv) Because as per array function el is for element and index is for data position which start from 0.
+            v) if we want spearate results then the statement for different testcase should be different.
+            vi) SO as the data increase by 1 then testcase statement index will also get increase by 1.
+            vii) Means each data will have different testcase name.
+            ix) Then inside it testcase we will write our normal test code.
+
+                    cy.visit('https://webdriveruniversity.com/Contact-Us/contactus.html')
+                    cy.get('[name="first_name"]').type(el.firstName)
+                    cy.get('[name="last_name"]').type(el.lastName)
+
+---------------------------------------------------------------------------------------
+17) Intercept
+---------------------------------------------------------------------------------------
+    
+    1. Why we use Intercept ???? 
+    1. Boht sara code kaam karne ke liye.
+    2. Intercept ye ===> mocking and stubing me response and generate karne ke liye.
+    3. Wait command kaam karne ke liye.
+    4. Intercept is a part of API Testing.
+    5. API testing >>>>>>> Intercept me >>>>>> event par click karne ke baad hi work karta hai.
+    6. Yaha hum request check karte hai.
+
+    Method ===> How to get the request url???
+
+    Inspect me jakar >>>>>>> network par click karo >>>> UI par render hoga body ka msg
+
+    html >>>>> http request 
+
+    7. Intercept kyu use karte hai >>>>> jab response render hi nai ho raha n baad ka code run ho raha >>>>> to error aayega
+
+    8. Aise samay wait use karna padega >>> jo ki ethical nai hai >>> esiliye intercept use karenge.
+
+    9. Network me jana...then button par click karna ...tab hume network me movements dikhenge.
+    10. us time niche kuch comments aayenge.
+    11. click karo 1 par. then usme >>>> Headers, Preview, Response dikhenge waha se url copy karna and method bhi check karna
+
+    12. Fixture me hume interceptData.json naam ki file banani hai. Jisse hum data lenge intercept me update karne ke liye.
+
+    13. Then import data from fixture file.
+
+        import interData from "../../fixtures/2interceptData.json"
+
+        a) Verify getComment
+            i) first visit the site.
+                    cy.intercept({ // network me sabse niche 1 me milega
+                        url: 'https://jsonplaceholder.cypress.io/comments/1',
+                        method: 'GET'
+                    },{
+                        body: interData
+                        // {
+                        //     "postId": 1,
+                        //     "id": 1,
+                        //     "name": "sonal",
+                        //     "email": "sonall@gmail.com",
+                        //     "body": "I am learning Cypress"
+                        //  } ===> This we have put in 2interceptData.json ==> as a fixture file
+                    }).as('getComment')
+                    cy.contains('Get Comment').click()
+                    cy.wait('@getComment').then((res)=>{
+                        cy.log(res)
+                        expect(res.response.body.name).to.eq(interData.name)
+                    })
+                        cy.get('[class="network-comment"]').should('contain',interData.body)
+
+            ii) As we have imported data from fixture with varaible name interData.
+            ii) So here in this program we will pass input to body as interData.
+            iii) res.response.body.name ===> result me response ke body ka name
+            iv) yaha hum check kar rai hai ki response me body ka name interData ke body ke name se match hota ya nai.
+            v) then same body name hume Get Comment par click par milna chahiye.
+
+        b) verify postComment
+            i) first visit the site.
+            ii) 
+                cy.intercept({// network me sabse niche dekhna comment me
+                    url:'https://jsonplaceholder.cypress.io/comments',
+                    method : 'POST'
+                // },{
+            //     body:
+            //     {
+            //         "name": "Novika",
+            //         "email": "sonall@gmail.com",
+            //         "body": "i am learning python",
+            //         "id": 501
+            //       }
+            }).as('postComment')
+            cy.contains('Post Comment').click()
+            cy.wait('@postComment').then((res2)=>{
+                cy.log(res2)
+                expect(res2.response.statusCode).to.eq(201)// yaha status code check kar rai hai
+            })
+            cy.get('[class="network-post-comment"]').should('have.text','POST successful!')
+
+
+            iii) Yaha post check kar rai hai...jo humne upar likha GET kiya wo hum ab POST kar rai hai.
+            iv) POST ka status code 201 hai jo hum yaha expect kar rai hai.
+
+        c) Verify Update Comment
+            i) Now here we will update the new name.
+            ii) PUT is use to update the data.
+
+                cy.intercept({// network me sabse niche dekhna 1 me
+                    url: 'https://jsonplaceholder.cypress.io/comments/1',
+                    method: 'PUT'
+                }).as('updateComment')
+                cy.contains('Update Comment').click()
+                cy.wait('@updateComment').then((res)=>{
+                    cy.log(res)
+                    expect(res.response.body.name).to.eq('Using PUT in cy.intercept()')// name ko update kar rai hai
+                    // eq ka sentence click karne ke baad network me jakar payload se laaya hai
+                })
+
+            iii) take the url from network.
+            iv) after doing the update we will get the required changes we want.
+

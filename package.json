@@ -10,9 +10,11 @@
   "keywords": [],
   "description": "",
   "devDependencies": {
+    "cy-verify-downloads": "^0.2.5",
     "cypress": "^13.11.0"
   },
   "dependencies": {
+    "node-xlsx": "^0.24.0",
     "npx": "^10.2.2"
   }
 }
