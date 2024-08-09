@@ -1106,3 +1106,97 @@ c) Window JS Prompt ===> for writing msg and then OK
             iii) take the url from network.
             iv) after doing the update we will get the required changes we want.
 
+------------------------------------------------------------------------------
+18) API Testing
+------------------------------------------------------------------------------
+
+    1. API Testing is base on CURD operations
+        CURD Operation ==> create, update, retrive, delete
+
+        // GET ===> retrive
+        // POST ===> create
+        // PUT ===> update
+        // DELETE ===> delete
+
+    a) GET
+        2. Here in GET we retrive original data, then in POST we create new data.
+         then with PUT we update the created data, now with DELETE will delete the data we want.
+
+        3. We will go on the regres website and get the link for GET, POST, PUT, DELETE.
+        4. In cy.request() ===> we have to pass url and method type.
+
+        5. Now with .then() arrow function we will define a new parameter.
+        6. and with the help of this 'res' parameter we will get the assertion we want.
+
+    b) POST (for single user which is pre-defined and imported from fixture)
+
+        i) For pre-defined
+            1. Here we will define user inside the it statement before cy.request()
+            2. This user is define with let varaible.
+                let user = {
+                    "name": "Sonal",
+                    "job": "Automation Tester"
+                 }
+            3. Then in cy.request({........}) we will pass url, method and body
+            4. in body we will pass the new data which we have pre-defined.
+            5. Then with .then() arrow function we will  check the assertion.
+            6. But with this our code become long.
+            7. so we will try out with fixture file.
+
+        ii) For fixture file
+            1. Here we will make json file inside fixture folder.
+            2. In this json file we will pass the data to create new data.
+            3. This fixture is imported like we normally import the file
+
+            import user1 from "../../fixtures/APIPost-Regres1.json"
+
+            4. This import is defined with user1
+            5. So will pass the user1 to body and same for the assertion.
+
+    2. In the above POST program we are not able to do testing for 2 entries.
+    3. Therefore we will make fixture file which will have data in the form of array.
+    4. Then with the help of forEach method we will execute testcase for multiple entries.
+
+    c) POST (for multiple data through fixture file available in array)
+        1. Same here we will write forEach() as a callback function with el as parameter and will call user2 which is imported from fixture.
+
+                user2.forEach((el)=>{........})
+
+        2. Inside this we will write it function were we call el.name with string interpolation
+
+                it(`Regres POST request2 (create) for ${el.name}`,function(){........})
+
+        3. Then inside that we will write cy.request()
+                cy.request({
+                    url: 'https://reqres.in/api/users',
+                    method: 'POST',
+                    body: el
+                }).then((res)=>{
+                    cy.log(res)
+                    .
+                    .
+                    .
+                })
+        4. el is parameter we have used earlier for data
+        5. So will continue with that only.
+        6. Then for result we have taken res as parameter.
+        7. WIth arrow function we will go for assertion.
+        8. Below things we will write under arrow function.
+
+        // expect(res.body.name).to.eq('Sonal') 
+
+                // This will get satisfied for 1st data, but this will not get satisfied for 2nd and 3rd data
+                // Therefore this will through error 
+
+                // expect(res.body.name).to.eq(user.name)
+                // expect(res.body.name).to.eq(user1.name)
+
+                // If we do coding like above then this will get error for other assertions.
+                // Therefore we will use el instead of user
+
+                expect(res.body.name).to.eq(el.name) // Now this will give proper result
+
+                expect(res.status).to.eq(201)
+                expect(res.statusText).to.eq("Created")
+
+    
