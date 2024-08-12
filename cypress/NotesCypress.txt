@@ -1116,7 +1116,7 @@ c) Window JS Prompt ===> for writing msg and then OK
         // GET ===> retrive ==> 200
         // POST ===> create ===> 201
         // PUT ===> update ===> 200
-        // DELETE ===> delete ===> 204
+        // DELETE ===> delete ===> 204 
 
     a) GET
 
