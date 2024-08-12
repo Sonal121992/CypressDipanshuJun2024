@@ -1113,12 +1113,15 @@ c) Window JS Prompt ===> for writing msg and then OK
     1. API Testing is base on CURD operations
         CURD Operation ==> create, update, retrive, delete
 
-        // GET ===> retrive
-        // POST ===> create
-        // PUT ===> update
-        // DELETE ===> delete
+        // GET ===> retrive ==> 200
+        // POST ===> create ===> 201
+        // PUT ===> update ===> 200
+        // DELETE ===> delete ===> 204
 
     a) GET
+
+        Status code here is 200
+
         2. Here in GET we retrive original data, then in POST we create new data.
          then with PUT we update the created data, now with DELETE will delete the data we want.
 
@@ -1129,6 +1132,8 @@ c) Window JS Prompt ===> for writing msg and then OK
         6. and with the help of this 'res' parameter we will get the assertion we want.
 
     b) POST (for single user which is pre-defined and imported from fixture)
+
+        status check 201
 
         i) For pre-defined
             1. Here we will define user inside the it statement before cy.request()
@@ -1158,6 +1163,9 @@ c) Window JS Prompt ===> for writing msg and then OK
     4. Then with the help of forEach method we will execute testcase for multiple entries.
 
     c) POST (for multiple data through fixture file available in array)
+
+        Status code here is 201
+
         1. Same here we will write forEach() as a callback function with el as parameter and will call user2 which is imported from fixture.
 
                 user2.forEach((el)=>{........})
@@ -1199,4 +1207,12 @@ c) Window JS Prompt ===> for writing msg and then OK
                 expect(res.status).to.eq(201)
                 expect(res.statusText).to.eq("Created")
 
+    d) PUT (Here we put the data to exisiting one)
+        1. inside body we will put some data which overwrite the previous data.
+        3. Here check status code 200
+
+    e) DELETE ==> delete will only delete the data.
+        1. We don't have to pass the body inside it.
+        2. Here the status code is 204.
+        
     
