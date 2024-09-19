@@ -41,12 +41,20 @@ function queryDB(connectionInfo, query) {
 //-------------------------------------------
 
 module.exports = defineConfig({
+  reporter: 'cypress-mochawesome-reporter', //// for cypress-mochawesome-reporter
+  projectId: 'k2guqc',
+  video: true, // to get video of whole running process
   chromeWebSecurity :false, //for multitab and multi-window
 
   //downloadsFolder:'cypress/e2e/6-downloadFile/downloadedFile',
 
   e2e: {
+    baseUrl : 'https://gorest.co.in/',
+    // baseUrl:'https://gorest.co.in/',
     setupNodeEvents(on, config) {
+
+      require('cypress-mochawesome-reporter/plugin')(on);  // for cypress-mochawesome-reporter
+
       // implement node event listeners here
       // //------------------mysql-------------------------
       // on("task", {

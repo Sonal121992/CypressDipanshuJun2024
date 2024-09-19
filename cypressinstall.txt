@@ -15,7 +15,7 @@ https://nodejs.org/en/download
 7.	Enter
 8.	Enter (we will get package json folder in VS) = till we get is this ok? Type yes enter
 9.	npm init -y
-10.	npm install cypress –save-dev  (we will get node module)[cypress: ^13.6.0]
+10.	npm install cypress --save-dev  (we will get node module)[cypress: ^13.6.0]
 11.	npm install npx [npx: ^10.2.2]
 12.	npx cypress open (message seems like using 1st time)
 13.	Allow access

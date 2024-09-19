@@ -1,0 +1,25 @@
+A database warning was encountered performing the requested operation:
+
+ORA-28002: the password will expire within 7 days
+28002. 00000 -  "the password will expire within %s days"
+*Cause:    The password of the user's account expired and entered the
+           grace period and should be changed. This can happen if any of the
+           following is true:
+           * The user account was associated with a password profile with
+           a limited password grace period.
+           * The user account was created as part of either a database
+           import inside a Pluggable Database (PDB) or clone of an
+           existing PDB and the user's password did not meet the
+           requirements of the mandatory profile (that was configured
+           with a limited password grace period) enforced in the PDB.
+           Since the password grace period has not yet elapsed, the user is
+           not prompted to input a new password and an ORA-28002 warning
+           message will continue to be displayed upon each successful login
+           to the user account, until the user changes their password.
+           After the grace period has elapsed, the password expires and until
+           the user successfully changes their password their login will
+           continue to fail with an ORA-28001 error.
+*Action:   Change the password or contact the database administrator to
+           understand the rules for choosing the new password which complies
+           with the mandatory profile.
+Vendor code 28002

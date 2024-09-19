@@ -1,0 +1,14 @@
+[
+    {
+        "firstName": "Sonal",
+        "lastName": "Khante",
+        "email": "sonalkhante@gmail.com",
+        "msg": "I am learning POM cypress with array method"
+    },
+    {
+        "firstName": "Chetan",
+        "lastName": "Khante",
+        "email": "chetan@gmail.com",
+        "msg": "POM Cypress with array"
+    }
+]

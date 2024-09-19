@@ -46,3 +46,12 @@ Cypress.Commands.add('getIFrameBody',(css)=>{
 Cypress.Commands.add('parseXlsx',(inputFile)=>{
     return cy.task('parseXlsx',{filePath: inputFile})
 })
+
+Cypress.Commands.add('HRMLoginSession', (un, pw) => {
+    cy.session([un,pw],()=>{
+        cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+        cy.get('[name="username"]').type(un)
+        cy.get('[name="password"]').type(pw)
+        cy.get('.orangehrm-login-button').click()
+    })
+ })

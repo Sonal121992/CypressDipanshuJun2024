@@ -30,6 +30,19 @@ A) Basic
 8. <input name="first_name" type="text" class="feedback-input" placeholder="First Name" fdprocessedid="r7zegn">
       ||    ||          ||
     tagname attribute  Value
+
+9)) Screenshot
+    1. it is method we can use when we want to take the screenshot or want to keep record.
+    2. If it is use normally
+        cy.screenshot()
+
+        Then it will take scrrenshot till that point that code.
+
+    3. If we use method with some specific element then we will get the screenshot of that element ex: submit button
+
+        cy.get('[type="submit"]').screenshot('submitbtn')
+
+    4. this screenshot will be saved in the form of png
 --------------------------------------------------------------------------------------
 B) Special Properties
 --------------------------------------------------------------------------------------
@@ -1216,3 +1229,11 @@ c) Window JS Prompt ===> for writing msg and then OK
         2. Here the status code is 204.
         
     
+
+))) video
+
+add video: true, ====> between 
+
+module.exports = defineConfig({
+  video: true,
+  chromeWebSecurity :false,
