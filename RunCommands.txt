@@ -1,0 +1,21 @@
+1) Normal Run Command ====> npx cypress open
+
+2) To get the report of the test case ==>
+
+        npx cypress run --spec cypress/e2e/3.Practice/1.LoginCntctValInvalFail.cy.js
+
+3) If we want video ==> true then we have to make changes in the cypress.config.js file
+    Also if we want video then we have to install cypress-mochawesome-reporter ==> installation guide given reporter.txt
+
+4) I want to run in specific browser and also want report like screenshot and video ===>
+
+        npx cypress run --spec cypress/e2e/3.Practice/25.screenshot.cy.js --headed --browser chrome
+
+5) we can also get Screenshot if we pass command in code itself.
+
+6) Focus tag is use to run specific group of cases in one go ===>
+
+        For this we make the changes in cypress.config file
+        command to run 
+
+                npm run --env TAGS="@regression"--headed --browser edge

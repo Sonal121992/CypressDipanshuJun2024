@@ -48,12 +48,17 @@ module.exports = defineConfig({
 
   //downloadsFolder:'cypress/e2e/6-downloadFile/downloadedFile',
 
+  env:{
+    "TAGS" : "@focus"
+  },
+
   e2e: {
     baseUrl : 'https://gorest.co.in/',
     // baseUrl:'https://gorest.co.in/',
     setupNodeEvents(on, config) {
 
       require('cypress-mochawesome-reporter/plugin')(on);  // for cypress-mochawesome-reporter
+      on('task', verifyDownloadTasks); //file download option
 
       // implement node event listeners here
       // //------------------mysql-------------------------
@@ -88,11 +93,13 @@ module.exports = defineConfig({
       })
       //---------------exeldata--------------
 
-      on('task', verifyDownloadTasks); //file download option
-
       // -----------------Task 1 -----------------------
       // task1 (file Cytask.cy,js)
       // on('task',taskname(){funcn def})
+      
+      // implement node event listeners here
+
+
       on('task',{
         print(){
           console.log('I am learning Cypress')
